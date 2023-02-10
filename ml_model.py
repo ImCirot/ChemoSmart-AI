@@ -4,6 +4,45 @@ import numpy as np
 from sklearn.model_selection import KFold
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import classification_report
+from sklearn.metrics import confusion_matrix
+import pickle
+
+def serialize(model):
+    #indichiamo il nome del file in cui verra salvato il modello
+    file_name = 'trained_model.sav'
+
+    #effettuiamo il dump del modello nel file
+    pickle.dump(model, open(file_name,"wb"))
+
+def validation(model,X_test, y_test,i,model_type):
+    #viene usato il test set per valutare il classificatore
+    pred = model.predict(X_test)
+
+    #calcoliamo matrice di confusione
+    matrix = confusion_matrix(y_test, pred)
+
+    #calcoliamo metriche di valutazione
+    report = classification_report(y_test, pred)
+
+    if i == 1:
+        open_type = "w"
+    else:
+        open_type = "a"
+    
+    #scriviamo su un file matrice di confusione ottenuta
+    with open(f"./reports/matrix_report_{model_type}.txt",open_type) as f:
+        f.write(f"{i} iterazione:\n")
+        f.write(f"Matrice di confusione:\n")
+        f.write(str(matrix))
+        f.write('\n')
+    
+    #scriviamo su un file le metriche di valutazione ottenute
+    with  open(f"./reports/metrics_report_{model_type}.txt",open_type) as f:
+        f.write(f"{i} iterazione:\n")
+        f.write("\nMetriche di valutazione:")
+        f.write(str(report))
+        f.write('\n')
 
 def training_and_testing_models():
     #lettura dataset
@@ -53,11 +92,15 @@ def training_and_testing_models():
         clf.fit(X_train,y_train)
         gnb.fit(X_train,y_train)
 
-        #stampa dei dataset di training e test
-        print(f"Set training: {X_train}")
-        print(f"Predict training: {y_train}")
-        print(f"Set testing: {X_test}")
-        print(f"Predict testing: {y_test}")
+        #vengono stampate metriche di valutazione dei due modelli sul test dell'iterazione k
+        validation(clf,X_test,y_test,i,"clf")
+        validation(gnb,X_test,y_test,i,"gnb")
+    
+    #richiamo la funzione di serializzazione del modello
+    serialize(gnb)
+    
+    #messaggio per notificare che la serializzazione del modello è avvenuta con successo ed il modello è pronto per essere usato altrove
+    print("Il modello è stato serializzato! È ora possibile utilizzarlo altrove!")
 
 #chiamo la funzione iniziale
 training_and_testing_models()
