@@ -130,6 +130,44 @@ def plotting_priorities_on_genetic_risk(data):
 
     #viene mostrato il grafico
     plt.show()
+    
+def plotting_priorities_on_smoking(data):
+    high_level_patients = data.loc[data['Level'] == 'High']
+    medium_level_patients = data.loc[data['Level'] == 'Medium']
+    low_level_patients = data.loc[data['Level'] == 'Low']
+
+    #grafico che mostra rapporto fra esposizione a fumo attivo (fumatore)/priorità alta
+    sns.histplot(data=high_level_patients, x='Smoking')
+
+    #set del titolo del grafico, label asse y e asse x
+    plt.title("Numero di pazienti a priorità alta per esposizione a fumo attivo (fumatore)")
+    plt.ylabel("Numero di casi")
+    plt.xlabel("Indice di esposizione a fumo attivo (fumatore)")
+
+    #viene mostrato il grafico
+    plt.show()
+
+    #grafico che mostra rapporto fra esposizione a fumo attivo (fumatore)/priorità media
+    sns.histplot(data=medium_level_patients, x='Smoking')
+
+    #set del titolo del grafico, label asse y e asse x
+    plt.title("Numero di pazienti a priorità media per esposizione a fumo attivo (fumatore)")
+    plt.ylabel("Numero di casi")
+    plt.xlabel("Indice di esposizione a fumo attivo (fumatore)")
+
+    #viene mostrato il grafico
+    plt.show()
+
+    #grafico che mostra rapporto fra esposizione a fumo attivo (fumatore)/priorità bassa
+    sns.histplot(data=low_level_patients, x='Smoking')
+
+    #set del titolo del grafico, label asse y e asse x
+    plt.title("Numero di pazienti a priorità bassa per esposizione a fumo attivo (fumatore)")
+    plt.ylabel("Numero di casi")
+    plt.xlabel("Indice di esposizione a fumo attivo (fumatore)")
+
+    #viene mostrato il grafico
+    plt.show()   
 
 def plotting_priorities_on_unbalanced_diet(data):
     high_level_patients = data.loc[data['priorita'] == 'High']
@@ -170,6 +208,7 @@ def plotting_priorities_on_unbalanced_diet(data):
     plt.show()
 
 
+
 #caricamento del dataset
 data = pd.read_csv('./dataset.csv')
 
@@ -186,6 +225,9 @@ plotting_priorities_on_alcohol_use(data)
 
 #funzione che mostra rapporto fattore di rischio familiare/priorità
 plotting_priorities_on_genetic_risk(data)
+
+#funzione che mostra rapporto fumo attivo/priorità
+plotting_priorities_on_smoking(data)
 
 #funzione che mostra rapporto fra alimentazione scorretta/priorità
 plotting_priorities_on_unbalanced_diet(data)
